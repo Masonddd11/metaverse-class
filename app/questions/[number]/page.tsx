@@ -1,5 +1,5 @@
 import React from "react";
-import { validateRequest } from "../../libs/auth";
+import { validateRequest } from "../../../lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function QuestionsPage({

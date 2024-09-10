@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { validateRequest } from "./libs/auth";
+import { validateRequest } from "../lib/auth";
 import Hero from "@/components/Hero";
 
 export default async function HomePage() {

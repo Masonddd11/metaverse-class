@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import prisma from "@/app/libs/db";
+import prisma from "@/lib/db";
 import { cookies } from "next/headers";
-import { lucia, validateRequest } from "@/app/libs/auth";
+import { lucia, validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { generateIdFromEntropySize } from "lucia";
 import { ActionResult } from "next/dist/server/app-render/types";
 import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 import { AuthEmail } from "@/components/email-templates/AuthEmail";
-import { generateLoginToken } from "@/app/libs/auth";
-import { generateUsernameFromEmail } from "@/app/libs/utils";
+import { generateLoginToken } from "@/lib/auth";
+import { generateUsernameFromEmail } from "@/lib/utils";
 
 export async function sendSignUpEmail(
   state: any,

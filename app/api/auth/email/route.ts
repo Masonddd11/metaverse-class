@@ -1,5 +1,5 @@
-import { generateLoginToken } from "@/app/libs/auth";
-import prisma from "@/app/libs/db";
+import { generateLoginToken } from "@/lib/auth";
+import prisma from "@/lib/db";
 import { AuthEmail } from "@/components/email-templates/AuthEmail";
 import { sendEmail } from "@/lib/email";
 import { NextRequest, NextResponse } from "next/server";
