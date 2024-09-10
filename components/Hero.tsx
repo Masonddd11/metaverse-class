@@ -6,13 +6,6 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import { useSession } from "@/provider/SessionProvider";
 
-const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
-];
-
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { session, user } = useSession();
@@ -28,8 +21,8 @@ export default function Example() {
   }
 
   return (
-    <div className="bg-gray-900">
-      <header className="absolute inset-x-0 top-0 z-50">
+    <div className="bg-gray-900 min-h-screen flex flex-col">
+      <header className="z-50">
         <nav
           aria-label="Global"
           className="flex items-center justify-between p-6 lg:px-8"
@@ -50,17 +43,7 @@ export default function Example() {
               <Bars3Icon aria-hidden="true" className="h-6 w-6" />
             </button>
           </div>
-          <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-sm font-semibold leading-6 text-white"
-              >
-                {item.name}
-              </a>
-            ))}
-          </div>
+
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {session?.userId ? (
               <a
@@ -106,17 +89,6 @@ export default function Example() {
             </div>
             <div className="mt-6 flow-root">
               <div className="-my-6 divide-y divide-gray-500/25">
-                <div className="space-y-2 py-6">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                    >
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
                 <div className="py-6">
                   <a
                     href="#"
@@ -131,7 +103,7 @@ export default function Example() {
         </Dialog>
       </header>
 
-      <div className="relative isolate overflow-hidden pt-14">
+      <div className="relative isolate overflow-hidden flex-grow flex flex-col justify-center">
         <img
           alt=""
           src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2830&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply"
@@ -149,7 +121,7 @@ export default function Example() {
             className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
           />
         </div>
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div className="relative z-10 mx-auto max-w-2xl px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Come and immerse in our virtual Metaverse Classroom.
