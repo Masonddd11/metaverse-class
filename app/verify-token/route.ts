@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/app/libs/db";
-import { lucia } from "@/app/libs/auth";
+import prisma from "@/lib/db";
+import { lucia } from "@/lib/auth";
 import { generateIdFromEntropySize } from "lucia";
-import { generateUsernameFromEmail } from "@/app/libs/utils";
+import { generateUsernameFromEmail } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);

@@ -2,7 +2,7 @@
 import { Lucia } from "lucia";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 const client = new PrismaClient();
 
@@ -80,11 +80,11 @@ export const validateRequest = cache(
 );
 
 function generateRandomString(length: number): string {
-  return crypto.randomBytes(length).toString('hex');
+  return crypto.randomBytes(length).toString("hex");
 }
 
 export async function generateLoginToken(email: string): Promise<string> {
-  const token = generateRandomString(20); 
+  const token = generateRandomString(20);
   const expires = new Date(Date.now() + 1000 * 60 * 60);
 
   const user = await prisma.user.findUnique({ where: { email } });

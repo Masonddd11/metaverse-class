@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest } from "next/server";
-import { validateRequest } from "../libs/auth";
+import { validateRequest } from "../../lib/auth";
 import { signOutUsers } from "@/server-actions/user-actions";
 import { redirect } from "next/navigation";
 

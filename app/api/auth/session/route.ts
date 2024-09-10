@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateRequest } from "@/app/libs/auth";
+import { validateRequest } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const { user, session } = await validateRequest();
