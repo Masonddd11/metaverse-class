@@ -33,13 +33,14 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/metaverse-classroom.git
-   cd metaverse-classroom
+   git clone https://github.com/your-username/metaverse-class.git
+   cd metaverse-class
    ```
 
 2. Install dependencies:
    ```
    npm install
+   npm run dev
    ```
 
 3. Set up environment variables:
