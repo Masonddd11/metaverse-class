@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  id           String       @id
+  id           String         @id
   sessions     Session[]
-  username     String       @unique
-  email        String       @unique
+  username     String         @unique
+  email        String         @unique
   loginTokens  LoginToken[]
+  userProgress UserProgress[]
 }
 
 model Session {
@@ -30,10 +31,50 @@ model Session {
 }
 
 model LoginToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  email     String
-  expires   DateTime
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  id      String   @id @default(cuid())
+  token   String   @unique
+  email   String
+  expires DateTime
+  user    User?    @relation(fields: [userId], references: [id])
+  userId  String?
+}
+
+model QuestionSet {
+  id           String         @id @default(cuid())
+  title        String
+  questions    Question[]
+  userProgress UserProgress[]
+  Video        Video[]
+}
+
+model Video {
+  id            String      @id @default(cuid())
+  title         String
+  url           String
+  questionSet   QuestionSet @relation(fields: [questionSetId], references: [id])
+  questionSetId String
+}
+
+model Question {
+  id            String      @id @default(cuid())
+  text          String
+  questionSet   QuestionSet @relation(fields: [questionSetId], references: [id])
+  options       String[]
+  correctAnswer String
+  questionSetId String
+}
+
+model UserProgress {
+  id               String      @id @default(cuid())
+  user             User        @relation(fields: [userId], references: [id])
+  userId           String
+  questionSet      QuestionSet @relation(fields: [questionSetId], references: [id])
+  questionSetId    String
+  allVideosWatched Boolean     @default(false)
+  points           Int         @default(0)
+  completed        Boolean     @default(false)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@unique([userId, questionSetId])
 }
