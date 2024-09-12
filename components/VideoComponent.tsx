@@ -1,13 +1,18 @@
 "use client";
 
-import { QuestionSet } from "@/lib/types";
+import { QuestionSet, Video } from "@/lib/types";
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 
 export default function VideoComponent({
-  questionSet,
+  questionInfo,
+  videos,
 }: {
-  questionSet: QuestionSet;
+  questionInfo: {
+    title: string;
+    questionSetId: string;
+  };
+  videos: Video[];
 }) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isVideoComplete, setIsVideoComplete] = useState(false);
@@ -22,7 +27,7 @@ export default function VideoComponent({
       setIsVideoComplete(true);
     };
 
-    const handleTimeUpdate = () => {
+    const handleTimeupdate = () => {
       setLastValidTime(videoElement.currentTime);
     };
 
@@ -33,18 +38,18 @@ export default function VideoComponent({
     };
 
     videoElement.addEventListener("ended", handleEnded);
-    videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    videoElement.addEventListener("timeupdate", handleTimeupdate);
     videoElement.addEventListener("seeked", handleSeeked);
 
     return () => {
       videoElement.removeEventListener("ended", handleEnded);
-      videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      videoElement.removeEventListener("timeupdate", handleTimeupdate);
       videoElement.removeEventListener("seeked", handleSeeked);
     };
   }, [currentVideoIndex, lastValidTime]);
 
   const handleNextVideo = () => {
-    if (currentVideoIndex < questionSet.videos.length) {
+    if (currentVideoIndex < videos.length) {
       setCurrentVideoIndex(currentVideoIndex + 1);
       setIsVideoComplete(false);
     } else {
@@ -55,18 +60,18 @@ export default function VideoComponent({
   function handleVideoWatched() {
     fetch("/api/auth/question-sets/video-watched", {
       method: "POST",
-      body: JSON.stringify({ questionSetId: questionSet.id }),
+      body: JSON.stringify({ questionSetId: questionInfo.questionSetId }),
     });
   }
 
-  const currentVideo = questionSet.videos[currentVideoIndex];
+  const currentVideo = videos[currentVideoIndex];
 
-  const hasNextVideo = currentVideoIndex < questionSet.videos.length - 1;
+  const hasNextVideo = currentVideoIndex < videos.length - 1;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="max-w-5xl mx-auto mt-8 p-4">
-        <h2 className="text-2xl font-bold mb-4">{questionSet.title}</h2>
+        <h2 className="text-2xl font-bold mb-4">{questionInfo.title}</h2>
         <h3 className="text-xl font-semibold mb-2">{currentVideo.title}</h3>
         <video
           ref={videoRef}
@@ -102,7 +107,7 @@ export default function VideoComponent({
         )}
         <div className="mt-4">
           <p>
-            Video {currentVideoIndex + 1} of {questionSet.videos.length}
+            Video {currentVideoIndex + 1} of {videos.length}
           </p>
         </div>
       </div>

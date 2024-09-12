@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import VideoComponent from "@/components/VideoComponent";
 import { getQuestionSetById } from "@/server-actions/question-actions";
 import prisma from "@/lib/db";
+import AnswerQuestionComponent from "@/components/AnswerQuestionComponent";
 
 export default async function QuestionsPage({
   params,
@@ -34,9 +35,21 @@ export default async function QuestionsPage({
   return (
     <div>
       {!userProgress?.allVideosWatched ? (
-        <VideoComponent questionSet={currentQuestionSet} />
+        <VideoComponent
+          questionInfo={{
+            title: currentQuestionSet.title,
+            questionSetId: currentQuestionSet.id,
+          }}
+          videos={currentQuestionSet.videos}
+        />
       ) : (
-        <div>Loading...</div>
+        <AnswerQuestionComponent
+          questions={currentQuestionSet.questions}
+          questionInfo={{
+            title: currentQuestionSet.title,
+            questionSetId: currentQuestionSet.id,
+          }}
+        />
       )}
     </div>
   );

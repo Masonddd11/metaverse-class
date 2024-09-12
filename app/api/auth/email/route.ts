@@ -1,4 +1,4 @@
-import { generateLoginToken } from "@/lib/auth";
+import { generateLoginToken } from "@/lib/utils";
 import prisma from "@/lib/db";
 import { AuthEmail } from "@/components/email-templates/AuthEmail";
 import { sendEmail } from "@/lib/email";

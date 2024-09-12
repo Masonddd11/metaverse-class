@@ -9,7 +9,7 @@ import { ActionResult } from "next/dist/server/app-render/types";
 import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 import { AuthEmail } from "@/components/email-templates/AuthEmail";
-import { generateLoginToken } from "@/lib/auth";
+import { generateLoginToken } from "@/lib/utils";
 
 export async function sendSignUpEmail(
   state: any,
