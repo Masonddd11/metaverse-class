@@ -2,8 +2,14 @@
 import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import crypto from "crypto";
+import { cookies } from "next/headers";
+import { cache } from "react";
+import type { Session, User } from "lucia";
+import { PrismaClient } from "@prisma/client";
 
-const adapter = new PrismaAdapter(prisma.session, prisma.user);
+const client = new PrismaClient();
+
+const adapter = new PrismaAdapter(client.session, client.user);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
@@ -33,12 +39,6 @@ declare module "lucia" {
 interface DatabaseUserAttributes {
   username: string;
 }
-
-import { cookies } from "next/headers";
-import { cache } from "react";
-
-import type { Session, User } from "lucia";
-import prisma from "./db";
 
 export const validateRequest = cache(
   async (): Promise<
@@ -79,6 +79,8 @@ export const validateRequest = cache(
 function generateRandomString(length: number): string {
   return crypto.randomBytes(length).toString("hex");
 }
+
+import prisma from "./db";
 
 export async function generateLoginToken(email: string): Promise<string> {
   const token = generateRandomString(20);
