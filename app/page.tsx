@@ -6,8 +6,8 @@ export default async function HomePage() {
   const { user } = await validateRequest();
 
   return (
-    <div>
+    <>
       <Hero />
-    </div>
+    </>
   );
 }
