@@ -3,6 +3,7 @@
 import { QuestionSet, Video } from "@/lib/types";
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 export default function VideoComponent({
   questionInfo,
@@ -16,8 +17,10 @@ export default function VideoComponent({
 }) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isVideoComplete, setIsVideoComplete] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [lastValidTime, setLastValidTime] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -57,11 +60,23 @@ export default function VideoComponent({
     }
   };
 
-  function handleVideoWatched() {
-    fetch("/api/auth/question-sets/video-watched", {
-      method: "POST",
-      body: JSON.stringify({ questionSetId: questionInfo.questionSetId }),
-    });
+  async function handleVideoWatched() {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/auth/question-sets/video/watched", {
+        method: "POST",
+        body: JSON.stringify({ questionSetId: questionInfo.questionSetId }),
+      });
+      if (response.ok) {
+        router.refresh();
+      } else {
+        console.error("Failed to mark video as watched");
+      }
+    } catch (error) {
+      console.error("Error marking video as watched:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const currentVideo = videos[currentVideoIndex];
@@ -91,14 +106,18 @@ export default function VideoComponent({
         </video>
         <Button
           onClick={hasNextVideo ? handleNextVideo : handleVideoWatched}
-          disabled={!isVideoComplete}
+          disabled={!isVideoComplete || isSubmitting}
           className={`px-4 py-2 rounded ${
-            isVideoComplete
+            isVideoComplete && !isSubmitting
               ? "bg-blue-500 text-white hover:bg-blue-600"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
-          {hasNextVideo ? "Next Video" : "Answer Questions"}
+          {isSubmitting
+            ? "Submitting..."
+            : hasNextVideo
+            ? "Next Video"
+            : "Answer Questions"}
         </Button>
         {!isVideoComplete && (
           <p className="mt-2 text-sm text-gray-600">

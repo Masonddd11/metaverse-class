@@ -21,8 +21,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userProgress = await prisma.userProgress.create({
-      data: {
+    const userProgress = await prisma.userProgress.upsert({
+      where: {
+        userId_questionSetId: {
+          userId: session.userId,
+          questionSetId,
+        },
+      },
+      update: {
+        allVideosWatched: true,
+      },
+      create: {
         userId: session.userId,
         questionSetId,
         allVideosWatched: true,
