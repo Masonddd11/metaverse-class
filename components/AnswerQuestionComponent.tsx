@@ -69,11 +69,10 @@ export default function AnswerQuestionComponent({
             <Button
               key={index}
               onClick={() => handleAnswerSelect(option)}
-              className={`w-full py-3 text-lg transition-colors ${
-                selectedAnswer === option
+              className={`w-full py-3 text-lg transition-colors ${selectedAnswer === option
                   ? "bg-blue-600 hover:bg-blue-700 text-white"
                   : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-              }`}
+                }`}
             >
               {option}
             </Button>
