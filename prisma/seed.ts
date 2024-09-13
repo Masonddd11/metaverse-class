@@ -15,6 +15,32 @@ async function main() {
             options: ["A JS library", "A database", "A server"],
             correctAnswer: "A JS library",
           },
+          {
+            id: "q2",
+            text: "Who developed React?",
+            options: ["Facebook", "Google", "Microsoft"],
+            correctAnswer: "Facebook",
+          },
+          {
+            id: "q3",
+            text: "What is JSX?",
+            options: [
+              "A syntax extension for JavaScript",
+              "A type of CSS",
+              "A JavaScript framework",
+            ],
+            correctAnswer: "A syntax extension for JavaScript",
+          },
+          {
+            id: "q4",
+            text: "What is JSX?",
+            options: [
+              "A syntax extension for JavaScript",
+              "A type of CSS",
+              "A JavaScript framework",
+            ],
+            correctAnswer: "A syntax extension for JavaScript",
+          },
         ],
       },
     },
