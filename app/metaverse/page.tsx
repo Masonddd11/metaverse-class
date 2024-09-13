@@ -27,7 +27,7 @@ const MetaversePage: React.FC = () => {
     scene.add(surface);
 
     // Add walls
-    const wallHeight = 10; // Increased wall height
+    const wallHeight = 10; 
     const wallGeometry = new THREE.BoxGeometry(20, wallHeight, 0.1);
     const wallMaterial = new THREE.MeshPhongMaterial({ color: 0x8888ff });
 
