@@ -98,47 +98,54 @@ export default function AnswerQuestionComponent({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-2xl w-full mx-auto p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Question {currentQuestionIndex + 1} of {questions.length}
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="max-w-3xl w-full mx-auto p-8 bg-white rounded-xl shadow-2xl">
+        <h2 className="text-4xl font-bold mb-8 text-center text-indigo-800">
+          {questionInfo.title}
         </h2>
-        <p className="text-xl mb-8 text-center text-gray-700">
+        <div className="mb-8 flex items-center justify-between">
+          <span className="text-lg font-semibold text-gray-600">
+            Question {currentQuestionIndex + 1} of {questions.length}
+          </span>
+        </div>
+        <p className="text-2xl mb-10 text-center text-gray-700 font-medium">
           {currentQuestion.text}
         </p>
-        <div className="space-y-4">
+        <div className="space-y-4 mb-10">
           {currentQuestion.options.map((option, index) => (
             <Button
               key={index}
               onClick={() => handleAnswerSelect(option)}
-              className={`w-full py-3 text-lg transition-colors ${
+              className={`w-full py-4 text-lg transition-all duration-200 rounded-lg ${
                 selectedAnswer === option
-                  ? "bg-blue-600 hover:bg-blue-700 text-white"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white transform scale-105"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-800 hover:shadow-md"
               }`}
             >
               {option}
             </Button>
           ))}
         </div>
-        <Button
-          onClick={hasNextQuestion ? handleNextQuestion : handleSubmit}
-          disabled={!selectedAnswer || isSubmitting}
-          className="mt-8 w-full py-3 text-lg bg-green-600 hover:bg-green-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting
-            ? "Submitting..."
-            : hasNextQuestion
-            ? "Next Question"
-            : "Finish"}
-        </Button>
-        <Button
-          onClick={handleRewatchVideo}
-          disabled={isRewatching}
-          className="mt-8 w-full py-3 text-lg bg-green-600 hover:bg-green-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isRewatching ? "Rewatching..." : "Rewatch Video"}
-        </Button>
+        <div className="flex flex-col space-y-4">
+          <Button
+            onClick={hasNextQuestion ? handleNextQuestion : handleSubmit}
+            disabled={!selectedAnswer || isSubmitting}
+            className="w-full py-4 text-xl bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+          >
+            {isSubmitting
+              ? "Submitting..."
+              : hasNextQuestion
+              ? "Next Question"
+              : "Finish"}
+          </Button>
+          <Button
+            onClick={handleRewatchVideo}
+            disabled={isRewatching}
+            className="w-full py-4 text-xl bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+          >
+            {isRewatching ? "Rewatching..." : "Rewatch Video"}
+          </Button>
+        </div>
       </div>
     </div>
   );
