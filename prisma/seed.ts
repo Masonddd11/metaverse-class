@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
-
 async function main() {
   const questionSet = await prisma.questionSet.create({
     data: {
@@ -15,37 +13,10 @@ async function main() {
             options: ["A JS library", "A database", "A server"],
             correctAnswer: "A JS library",
           },
-          {
-            id: "q2",
-            text: "Who developed React?",
-            options: ["Facebook", "Google", "Microsoft"],
-            correctAnswer: "Facebook",
-          },
-          {
-            id: "q3",
-            text: "What is JSX?",
-            options: [
-              "A syntax extension for JavaScript",
-              "A type of CSS",
-              "A JavaScript framework",
-            ],
-            correctAnswer: "A syntax extension for JavaScript",
-          },
-          {
-            id: "q4",
-            text: "What is JSX?",
-            options: [
-              "A syntax extension for JavaScript",
-              "A type of CSS",
-              "A JavaScript framework",
-            ],
-            correctAnswer: "A syntax extension for JavaScript",
-          },
         ],
       },
     },
   });
-
   await prisma.video.createMany({
     data: [
       {
@@ -68,10 +39,8 @@ async function main() {
       },
     ],
   });
-
   console.log("Seed data created successfully");
 }
-
 main()
   .catch((e) => {
     console.error(e);
