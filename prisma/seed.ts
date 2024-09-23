@@ -7,6 +7,7 @@ async function main() {
       title: "Question 1: Introduction to React",
       questions: {
         create: [
+
           {
             id: "q1",
             text: "What is React?",
