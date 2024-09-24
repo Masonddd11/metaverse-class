@@ -44,6 +44,7 @@ export default function AnswerQuestionComponent({
       );
       if (response.ok) {
         router.refresh();
+        router.push("/metaverse");
       } else {
         console.error("Failed to submit questions");
       }
