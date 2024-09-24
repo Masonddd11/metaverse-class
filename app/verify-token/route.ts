@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { lucia } from "@/lib/auth";
 import { generateIdFromEntropySize } from "lucia";
-import { encryptEmail } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
     }
 
     let user = await prisma.user.findUnique({
-      where: { email: encryptEmail(loginToken.email) },
+      where: { email: loginToken.email },
     });
 
     if (!user) {
@@ -33,7 +32,7 @@ export async function GET(request: NextRequest) {
       user = await prisma.user.create({
         data: {
           id: userId,
-          email: encryptEmail(loginToken.email),
+          email: loginToken.email,
         },
       });
     }
