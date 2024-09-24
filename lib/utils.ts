@@ -7,15 +7,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function generateUsernameFromEmail(email: string): string {
-  return email
-    .split("@")[0]
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "");
-}
-
 function generateRandomString(length: number): string {
   return crypto.randomBytes(length).toString("hex");
+}
+
+export function encryptEmail(email: string): string {
+  const key = crypto.scryptSync(process.env.ENCRYPTION_KEY || "", "salt", 32);
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
+  let encrypted = cipher.update(email, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return iv.toString("hex") + encrypted;
+}
+
+export function decryptEmail(encryptedEmail: string): string {
+  const key = crypto.scryptSync(process.env.ENCRYPTION_KEY || "", "salt", 32);
+  const iv = Buffer.from(encryptedEmail.slice(0, 32), "hex");
+  const encrypted = encryptedEmail.slice(32);
+  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+  let decrypted = decipher.update(encrypted, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+  return decrypted;
 }
 
 export async function generateLoginToken(email: string): Promise<string> {
@@ -29,7 +41,6 @@ export async function generateLoginToken(email: string): Promise<string> {
       token,
       email,
       expires,
-      userId: user?.id,
     },
   });
 

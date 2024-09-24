@@ -19,9 +19,7 @@ model User {
   id              String         @id
   luckyDrawNumber Int            @default(autoincrement())
   sessions        Session[]
-  username        String         @unique
   email           String         @unique
-  loginTokens     LoginToken[]
   userProgress    UserProgress[]
 }
 
@@ -29,7 +27,6 @@ model Session {
   id        String   @id
   userId    String
   expiresAt DateTime
-
   user User @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
@@ -38,8 +35,6 @@ model LoginToken {
   token   String   @unique
   email   String
   expires DateTime
-  userId  String?
-  user    User?    @relation(fields: [userId], references: [id])
 }
 
 model QuestionSet {

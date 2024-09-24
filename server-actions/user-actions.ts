@@ -10,6 +10,7 @@ import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 import { AuthEmail } from "@/components/email-templates/AuthEmail";
 import { generateLoginToken } from "@/lib/utils";
+import { encryptEmail } from "@/lib/utils";
 
 export async function sendSignUpEmail(
   state: any,
@@ -28,7 +29,9 @@ export async function sendSignUpEmail(
 
     const { email, questionId } = parse;
 
-    const loginToken = await generateLoginToken(email);
+    const encryptedEmail = encryptEmail(email);
+
+    const loginToken = await generateLoginToken(encryptedEmail);
 
     await sendEmail({
       subject: "Log in to Our Metaverse Classroom",
