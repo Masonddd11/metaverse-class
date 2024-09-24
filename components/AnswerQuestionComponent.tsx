@@ -26,10 +26,6 @@ export default function AnswerQuestionComponent({
   const currentQuestion = questions[currentQuestionIndex];
   const hasNextQuestion = currentQuestionIndex < questions.length - 1;
 
-  useEffect(() => {
-    console.log("Updated answers:", answers); // Debugging log
-  }, [answers]);
-
   const handleAnswerChange = (questionId: string, selectedAnswer: string) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -38,7 +34,6 @@ export default function AnswerQuestionComponent({
   };
 
   const handleSubmit = async () => {
-    console.log("Submitting answers:", answers); // Debugging log
     setIsSubmitting(true);
     try {
       const response = await fetch(

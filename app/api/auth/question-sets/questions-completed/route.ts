@@ -12,8 +12,6 @@ export async function POST(request: NextRequest) {
 
     const { questionSetId, answers } = await request.json();
 
-    console.log("questionSetId", questionSetId);
-    console.log("answers", answers);
 
     if (!questionSetId || !answers) {
       return NextResponse.json(
@@ -37,8 +35,6 @@ export async function POST(request: NextRequest) {
     let score = 0;
     questionSet.questions.forEach((question) => {
       if (answers[question.id] === question.correctAnswer) {
-        console.log("Correct answer:", question.correctAnswer);
-        console.log("User answer:", answers[question.id]);
         score += 1;
       }
     });
