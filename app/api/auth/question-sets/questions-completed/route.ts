@@ -10,14 +10,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { questionSetId, score } = await request.json();
+    const { questionSetId, answers } = await request.json();
 
-    if (!questionSetId || score === undefined) {
+    console.log("questionSetId", questionSetId);
+    console.log("answers", answers);
+
+    if (!questionSetId || !answers) {
       return NextResponse.json(
-        { error: "Question set ID and score are required" },
+        { error: "Question set ID and answers are required" },
         { status: 400 }
       );
     }
+
+    const questionSet = await prisma.questionSet.findUnique({
+      where: { id: questionSetId },
+      include: { questions: true },
+    });
+
+    if (!questionSet) {
+      return NextResponse.json(
+        { error: "Question set not found" },
+        { status: 404 }
+      );
+    }
+
+    let score = 0;
+    questionSet.questions.forEach((question) => {
+      if (answers[question.id] === question.correctAnswer) {
+        console.log("Correct answer:", question.correctAnswer);
+        console.log("User answer:", answers[question.id]);
+        score += 1;
+      }
+    });
 
     const updatedProgress = await prisma.userProgress.update({
       where: {

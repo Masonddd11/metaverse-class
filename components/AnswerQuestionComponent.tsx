@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Question } from "@/lib/types";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
@@ -17,10 +17,8 @@ export default function AnswerQuestionComponent({
   questions,
   questionInfo,
 }: AnswerQuestionComponentProps) {
+  const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [score, setScore] = useState(0);
-  const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRewatching, setIsRewatching] = useState(false);
   const router = useRouter();
@@ -28,17 +26,28 @@ export default function AnswerQuestionComponent({
   const currentQuestion = questions[currentQuestionIndex];
   const hasNextQuestion = currentQuestionIndex < questions.length - 1;
 
+  useEffect(() => {
+    console.log("Updated answers:", answers); // Debugging log
+  }, [answers]);
+
+  const handleAnswerChange = (questionId: string, selectedAnswer: string) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: selectedAnswer,
+    }));
+  };
+
   const handleSubmit = async () => {
+    console.log("Submitting answers:", answers); // Debugging log
     setIsSubmitting(true);
-    correctAnswer();
     try {
       const response = await fetch(
         "/api/auth/question-sets/questions-completed",
         {
           method: "POST",
           body: JSON.stringify({
-            score,
             questionSetId: questionInfo.questionSetId,
+            answers: answers,
           }),
         }
       );
@@ -55,27 +64,13 @@ export default function AnswerQuestionComponent({
     }
   };
 
-  const handleAnswerSelect = (answer: string) => {
-    setSelectedAnswer(answer);
-  };
-
-  function correctAnswer() {
-    if (
-      selectedAnswer === currentQuestion.correctAnswer &&
-      !answeredQuestions.includes(currentQuestion.id)
-    ) {
-      setScore(score + 1);
-      setAnsweredQuestions([...answeredQuestions, currentQuestion.id]);
-    }
-  }
-
   const handleNextQuestion = () => {
-    correctAnswer();
-    if (hasNextQuestion) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
-    } else {
-      console.log("Score: ", score);
+    if (answers[currentQuestion.id]) {
+      if (hasNextQuestion) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      } else {
+        handleSubmit();
+      }
     }
   };
 
@@ -116,9 +111,9 @@ export default function AnswerQuestionComponent({
           {currentQuestion.options.map((option, index) => (
             <Button
               key={index}
-              onClick={() => handleAnswerSelect(option)}
+              onClick={() => handleAnswerChange(currentQuestion.id, option)}
               className={`w-full py-4 text-lg transition-all duration-200 rounded-lg ${
-                selectedAnswer === option
+                answers[currentQuestion.id] === option
                   ? "bg-indigo-600 hover:bg-indigo-700 text-white transform scale-105"
                   : "bg-gray-100 hover:bg-gray-200 text-gray-800 hover:shadow-md"
               }`}
@@ -129,8 +124,8 @@ export default function AnswerQuestionComponent({
         </div>
         <div className="flex flex-col space-y-4">
           <Button
-            onClick={hasNextQuestion ? handleNextQuestion : handleSubmit}
-            disabled={!selectedAnswer || isSubmitting}
+            onClick={handleNextQuestion}
+            disabled={!answers[currentQuestion.id] || isSubmitting}
             className="w-full py-4 text-xl bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
           >
             {isSubmitting
