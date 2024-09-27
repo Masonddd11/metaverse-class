@@ -1,9 +1,10 @@
 "use client";
 
 import { QuestionSet, Video } from "@/lib/types";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import YouTube from "react-youtube";
 
 export default function VideoComponent({
   questionInfo,
@@ -18,41 +19,14 @@ export default function VideoComponent({
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isVideoComplete, setIsVideoComplete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [lastValidTime, setLastValidTime] = useState(0);
   const router = useRouter();
 
-  useEffect(() => {
-    const videoElement = videoRef.current;
-    if (!videoElement) return;
-
-    const handleEnded = () => {
-      setIsVideoComplete(true);
-    };
-
-    const handleTimeupdate = () => {
-      setLastValidTime(videoElement.currentTime);
-    };
-
-    const handleSeeked = () => {
-      if (videoElement.currentTime > lastValidTime) {
-        videoElement.currentTime = lastValidTime;
-      }
-    };
-
-    videoElement.addEventListener("ended", handleEnded);
-    videoElement.addEventListener("timeupdate", handleTimeupdate);
-    videoElement.addEventListener("seeked", handleSeeked);
-
-    return () => {
-      videoElement.removeEventListener("ended", handleEnded);
-      videoElement.removeEventListener("timeupdate", handleTimeupdate);
-      videoElement.removeEventListener("seeked", handleSeeked);
-    };
-  }, [currentVideoIndex, lastValidTime]);
+  const handleVideoEnd = () => {
+    setIsVideoComplete(true);
+  };
 
   const handleNextVideo = () => {
-    if (currentVideoIndex < videos.length) {
+    if (currentVideoIndex < videos.length - 1) {
       setCurrentVideoIndex(currentVideoIndex + 1);
       setIsVideoComplete(false);
     } else {
@@ -80,30 +54,34 @@ export default function VideoComponent({
   }
 
   const currentVideo = videos[currentVideoIndex];
-
   const hasNextVideo = currentVideoIndex < videos.length - 1;
 
+  const getYouTubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const videoId = getYouTubeId(currentVideo.url);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="max-w-5xl mx-auto mt-8 p-4">
+    <div className="flex flex-col items-center justify-center w-full h-screen">
+      <div className=" mx-auto mt-8 w-[70%] ">
         <h2 className="text-2xl font-bold mb-4">{questionInfo.title}</h2>
-        <h3 className="text-xl font-semibold mb-2">{currentVideo.title}</h3>
-        <video
-          ref={videoRef}
-          className="w-full mb-4"
-          key={currentVideo.id}
-          controls
-          onSeeking={(e) => {
-            const video = e.currentTarget;
-            if (video.currentTime > video.duration) {
-              video.currentTime = video.duration;
-              video.pause();
-            }
-          }}
-        >
-          <source src={currentVideo.url} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div className="mb-4">
+          <YouTube
+            videoId={videoId || ""}
+            className="aspect-video"
+            opts={{
+              width: '100%',
+              height: '100%',
+              playerVars: {
+                autoplay: 1,
+              },
+            }}
+            onEnd={handleVideoEnd}
+          />
+        </div>
         <Button
           onClick={hasNextVideo ? handleNextVideo : handleVideoWatched}
           disabled={!isVideoComplete || isSubmitting}
