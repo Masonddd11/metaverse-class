@@ -34,7 +34,8 @@ export function AuthEmail({ loginToken, questionId }: AuthEmailProps) {
           </Button>
           <Text style={paragraphStyle}>
             After logging in, you&apos;ll be redirected to your previous
-            question:
+            question, and also a email contains your lucky draw number will be
+            sent to you.
           </Text>
         </Container>
       </Body>

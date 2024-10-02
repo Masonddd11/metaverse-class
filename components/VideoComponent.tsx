@@ -1,7 +1,7 @@
 "use client";
 
 import { QuestionSet, Video } from "@/lib/types";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import YouTube from "react-youtube";
@@ -17,20 +17,14 @@ export default function VideoComponent({
   videos: Video[];
 }) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isVideoComplete, setIsVideoComplete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-
-  const handleVideoEnd = () => {
-    setIsVideoComplete(true);
-  };
 
   const handleNextVideo = () => {
     if (currentVideoIndex < videos.length - 1) {
       setCurrentVideoIndex(currentVideoIndex + 1);
-      setIsVideoComplete(false);
     } else {
-      console.log("All videos watched");
+      handleVideoWatched();
     }
   };
 
@@ -57,36 +51,36 @@ export default function VideoComponent({
   const hasNextVideo = currentVideoIndex < videos.length - 1;
 
   const getYouTubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match && match[2].length === 11 ? match[2] : null;
   };
 
   const videoId = getYouTubeId(currentVideo.url);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen">
-      <div className=" mx-auto mt-8 w-[70%] ">
+      <div className="mx-auto mt-8 w-[70%]">
         <h2 className="text-2xl font-bold mb-4">{questionInfo.title}</h2>
         <div className="mb-4">
           <YouTube
             videoId={videoId || ""}
             className="aspect-video"
             opts={{
-              width: '100%',
-              height: '100%',
+              width: "100%",
+              height: "100%",
               playerVars: {
                 autoplay: 1,
               },
             }}
-            onEnd={handleVideoEnd}
           />
         </div>
         <Button
-          onClick={hasNextVideo ? handleNextVideo : handleVideoWatched}
-          disabled={!isVideoComplete || isSubmitting}
+          onClick={handleNextVideo}
+          disabled={isSubmitting}
           className={`px-4 py-2 rounded ${
-            isVideoComplete && !isSubmitting
+            !isSubmitting
               ? "bg-blue-500 text-white hover:bg-blue-600"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
@@ -97,11 +91,6 @@ export default function VideoComponent({
             ? "Next Video"
             : "Answer Questions"}
         </Button>
-        {!isVideoComplete && (
-          <p className="mt-2 text-sm text-gray-600">
-            Please watch the entire video to proceed.
-          </p>
-        )}
         <div className="mt-4">
           <p>
             Video {currentVideoIndex + 1} of {videos.length}

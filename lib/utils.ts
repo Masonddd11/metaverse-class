@@ -15,7 +15,6 @@ export async function generateLoginToken(email: string): Promise<string> {
   const token = generateRandomString(20);
   const expires = new Date(Date.now() + 1000 * 60 * 60);
 
-  const user = await prisma.user.findUnique({ where: { email } });
 
   await prisma.loginToken.create({
     data: {

@@ -16,7 +16,7 @@ datasource db {
 }
 
 model User {
-  id              String         @id
+  id              String         @id @default(cuid())
   luckyDrawNumber Int            @default(autoincrement())
   sessions        Session[]
   email           String         @unique
