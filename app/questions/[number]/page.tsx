@@ -32,6 +32,10 @@ export default async function QuestionsPage({
     return <div>Question not found</div>;
   }
 
+  if (userProgress?.completed) {
+    redirect(`/metaverse`);
+  }
+
   return (
     <div>
       {!userProgress?.allVideosWatched ? (
